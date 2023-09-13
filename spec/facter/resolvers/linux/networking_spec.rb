@@ -27,6 +27,10 @@ describe Facter::Resolvers::Linux::Networking do
         .with('/sys/class/net/lo/operstate', nil).and_return('unknown')
       allow(Facter::Util::FileHelper).to receive(:safe_read)
         .with('/sys/class/net/ens160/operstate', nil).and_return('up')
+      allow(Facter::Util::FileHelper).to receive(:safe_read)
+        .with('/sys/class/net/ens160/speed', nil).and_return(1000)
+      allow(Facter::Util::FileHelper).to receive(:safe_read)
+        .with('/sys/class/net/ens160/duplex').and_return('full')
     end
 
     after do
@@ -280,6 +284,7 @@ describe Facter::Resolvers::Linux::Networking do
               { address: '::1', netmask: 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
                 network: '::1', scope6: 'host', flags: ['permanent'] }
             ],
+            duplex: 'full',
             ip6: '::1',
             mtu: 65_536,
             netmask6: 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
@@ -300,7 +305,8 @@ describe Facter::Resolvers::Linux::Networking do
             network6: 'fe80::',
             operational_state: 'up',
             physical: true,
-            scope6: 'link'
+            scope6: 'link',
+            speed: 1000
           }
         }
       end
